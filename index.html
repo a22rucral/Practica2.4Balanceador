@@ -1,0 +1,619 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mydomain.org/mysite/">
+      
+      
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.43">
+    
+    
+      
+        <title>Practica 2.4 Balanceador</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.0253249f.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#practica-24-proxi-inverso-con-blanceo-de-carga" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Practica 2.4 Balanceador" class="md-header__button md-logo" aria-label="Practica 2.4 Balanceador" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Practica 2.4 Balanceador
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Practica 2.4 - Proxi Inverso con Blanceo de carga.
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Practica 2.4 Balanceador" class="md-nav__button md-logo" aria-label="Practica 2.4 Balanceador" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Practica 2.4 Balanceador
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Practica 2.4 - Proxi Inverso con Blanceo de carga.
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Practica 2.4 - Proxi Inverso con Blanceo de carga.
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tarea:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuraciones
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuraciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nginx-servidor-web-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Servidor web 1.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-servidor-web-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Servidor web 2.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-balanceador" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Balanceador.
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuestiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestiones.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cuestiones.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuestion-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestión 1:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuestion-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestion 2:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tarea:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuraciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuraciones
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuraciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nginx-servidor-web-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Servidor web 1.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-servidor-web-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Servidor web 2.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-balanceador" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Balanceador.
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuestiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestiones.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cuestiones.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cuestion-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestión 1:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cuestion-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cuestion 2:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="practica-24-proxi-inverso-con-blanceo-de-carga">Practica 2.4 - Proxi Inverso con Blanceo de carga.</h1>
+<h2 id="introduccion">Introducción</h2>
+<p>Los servidores proxy inversos y los balanceadores actúan como intermediarios en la comunicación entre los clientes y los servidores realizando funciones que mejoran la eficiencia. 
+Estos dos se ubican entre clientes y servidores, aceptando solicitudes del primero y entregando respuestas del segundo. La implementación del proxy inverso puede ser posible independientemente del número de servidores mientras que el balanceador requiere un mínimo de dos. Este es la cara pública del servidor, se encarga de aceptar solicitudes de los navegadores. </p>
+<p>Los balanceadores con mayor frecuencia se encarga de distribuir peticiones entre varios servidores, ya que serían demasiado volumen de solicitudes para un solo servidor. Esto también hace que en caso de fallo de un servidor, el otro siga siendo funcional. </p>
+<h2 id="tarea">Tarea:</h2>
+<p>Configurar dos servidores Nginx con dos máquinas Debian, además utilizaremos el proxy inversio configurado en la práctica anterior. </p>
+<p>Como resultado de la pŕactica, al acceder al balanceador, nos irá redirigiendo a los dos servidores configurados. </p>
+<h3 id="configuraciones">Configuraciones</h3>
+<h4 id="nginx-servidor-web-1">Nginx Servidor web 1.</h4>
+<p>Primero deberemos cambiar la configuración de salida. Antes teníamos la de 'static-example' descargada de github. Ahora crearemos un index.html sencillo en la carpeta /var/www/webserver/html que nos dará información de en que servidor estamos en cada momento para confirmar el funcionamiento del balanceador. 
+Nos iremos a la carpeta.</p>
+<p><img alt="Comando 1" src="assets/images/01comando_listarhtml.png" /></p>
+<p>Y mediante el comando ** sudo nano index.html** crearemos el archivo y lo editaremos de la siguiente manera. </p>
+<p><img alt="Comando 2" src="assets/images/02comando_cambiarindex.png" /></p>
+<p>En el archivo de configuranción del servidor en el directorio <strong>sites-avaliable</strong> mantendremos la configuración. Escuchará por el puerto 8080 y añadiremos una cabecera que se llame "serv_web1_Alejandro".  Con el siguiente comando. Dentro del bloque location de tu archivo de configuracion. </p>
+<pre><code>add header Host serv_web1_Alejandro
+</code></pre>
+<p>Al querer mostrar otro index.html que el que estabamos mostrando, también cambiaremos las siguientes líneas del archivo de configuración de vuestro servidor indicando la ruta del index.html. </p>
+<p><img alt="Comando 3" src="assets/images/03comando_cambiarrutaindex.png" /></p>
+<p>Al entrar en el servidor nos mostrará esta página: </p>
+<p><img alt="Comando 4" src="assets/images/04comando_resultadoindex.png" /></p>
+<h4 id="nginx-servidor-web-2">Nginx Servidor web 2.</h4>
+<p>Esto lo repetiremos con el segundo servidor. 
+Para ello habrá que clonarlo, indicaremos que cree nuevas direcciones IP. 
+Modificaremos el index.html ubicado en la misma carpeta de la siguiente manera: </p>
+<p><img alt="Comando 5" src="assets/images/05comando_cambiarindex2.png" /></p>
+<p>Y le cambiaremos el nombre de webserver a webserver2 en todos los nomnbres que conlleve. 
+- Ruta /var/www/webserver 
+- Archivo de configuración webserver2
+- Dentro del archivo, líneas server_name</p>
+<p>No podemos olvidarnos de hacer el link simbólico de sites-enables a sites-avaliable con el siguiente comando : </p>
+<pre><code>sudo ln -s /etc/nginx/sites-available/tu-sitio /etc/nginx/sites-enabled/
+</code></pre>
+<p>Al listar los elementos de sites-enables nos debe de salir así; </p>
+<p><img alt="Comando 6" src="assets/images/06comando_linkwebserver2.png" /></p>
+<p>Al comprobar el servidor nos debe dar la siguiente salida. </p>
+<p><img alt="Comando 7" src="assets/images/07comando_resultadoindex2.png" /></p>
+<h4 id="nginx-balanceador">Nginx Balanceador.</h4>
+<p>Cambiaremos el archivo de configuración del que era nuestro proxy anteriormente para hacerlo un balanceador de la siguiente manera : </p>
+<p><img alt="Comando 8" src="assets/images/08comando_balanceadorajustes.png" /> </p>
+<p>Bloque upstream backend_hosts:
+- Upstream es una directiva que define un grupo de servidores que pueden manejar solicitudes, lo llamamos backend_hosts.
+- Random : Estrategia de balanceo de carga que elige al azar uno de los dos servidores. 
+- Los servidores disponibles a recibir solicitudes. </p>
+<p>Bloque server:
+- Define la configuracion de un servidor virtual en Nginx. 
+- Listen 80, especifica que el servidor escucha el puerto 80.
+- Dentro de este bloque definimos el bloque location que establece como se manejan las solicitudes para la raíz del servidor.<br />
+- El proxy_pass redirige las solicitudes al grupo de servidores antes definido. </p>
+<p>Tras esta configuración solo quedará la comprobación. 
+Utilizando la ip del balanceador : 192.168.68.143  y presionando el F5, nos irá mostrando simultaneamente la salida de cada uno de los servidores. </p>
+<p><img alt="Comando 9" src="assets/images/09comando_respeustabalanceador.png" /></p>
+<p><img alt="Comando 10" src="assets/images/10comando_respuestabalanceador.png" /></p>
+<h2 id="cuestiones">Cuestiones.</h2>
+<h3 id="cuestion-1">Cuestión 1:</h3>
+<p>Busca información de qué otros métodos de balanceo se pueden aplicar con Nginx y describe al menos 3 de ellos.</p>
+<ol>
+<li>Round Robin: Es el método predeterminado y el mas simple. Distribuye las solicitudes de manera cíclica y uniforme, recibiendo todos un número similar de solicitudes. </li>
+<li>Least Connections: Este método asigna la solicitud al servidor con menos conexiones activas, lo que ayuda a mantener el balance si algunos están mas sobrecargados. </li>
+<li>IP Hash: Este método asiga las solicitudes en función de la dirección IP del cliente. Esto hace que el mismo usuario solo se conecta a uan IP, clave para mantener la persistencia de sesión. </li>
+</ol>
+<h3 id="cuestion-2">Cuestion 2:</h3>
+<p>Si quiero añadir 2 servidores web más al balanceo de carga, describe detalladamente qué configuración habría que añadir y dónde.
+La solución a esto, es dentro del bloque upstream, le indicamos los dos servidores extras, debajo de los otros dos que ya tenemos, de forma que en vez de repartir entre 2 repartiría las peticiones entre 4. Quedaría de tal forma. </p>
+<pre><code>    upstream backend_hosts {
+                random;
+                server ________:____;
+                server ________:____;
+                server ________:____;
+                server ________:____;
+    }
+            server {
+                listen 80;
+                server_name ________;      
+                location / {
+                    proxy_pass http://backend_hosts;
+                }
+            }
+
+</code></pre>
+<p>Esa sería la estructura a seguir. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
